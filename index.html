@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul Thakur — Software Engineer & System Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --cream: #ede7d9;
+    --rust: #b5451b;
+    --gold: #c9933a;
+    --muted: #7a7068;
+    --line: rgba(13,13,13,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--rust); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 4rem;
+    background: rgba(245,240,232,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+  }
+
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--rust); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 8rem 3rem 6rem 4rem;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 1.8rem;
+  }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 6vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .hero-rule {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin: 2.5rem 0;
+  }
+
+  .hero-subtitle {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 380px;
+  }
+
+  .hero-cta-row {
+    display: flex; gap: 1.2rem; margin-top: 3rem;
+  }
+
+  .btn-primary {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    background: var(--ink);
+    color: var(--paper);
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--rust); transform: translateY(-2px); }
+
+  .btn-outline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    transition: all 0.25s;
+  }
+  .btn-outline:hover { border-color: var(--rust); color: var(--rust); transform: translateY(-2px); }
+
+  .hero-right {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 4rem 6rem 3rem;
+    position: relative;
+  }
+
+  .years-badge {
+    position: absolute;
+    top: 50%; right: 4rem;
+    transform: translateY(-50%);
+    text-align: center;
+  }
+
+  .years-num {
+    font-size: 9rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--cream);
+    letter-spacing: -0.05em;
+    position: relative;
+  }
+
+  .years-num::after {
+    content: '+';
+    font-size: 3rem;
+    color: var(--rust);
+    position: absolute;
+    top: 1rem; right: -1rem;
+  }
+
+  .years-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: -1rem;
+  }
+
+  .hero-stats {
+    position: absolute; bottom: 6rem; left: 3rem;
+    display: flex; gap: 3rem;
+  }
+
+  .stat-item { text-align: left; }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 7rem 4rem; }
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.6rem;
+  }
+
+  .section-title {
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 4rem;
+  }
+
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ── SPECIALTIES ── */
+  #specialties {
+    background: var(--ink);
+    color: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #specialties::before {
+    content: 'EXPERTISE';
+    position: absolute;
+    font-size: 18vw;
+    font-weight: 300;
+    color: rgba(255,255,255,0.03);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -0.04em;
+  }
+
+  #specialties .section-title em { color: var(--gold); }
+
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .spec-card {
+    padding: 3rem 2.5rem;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    transition: background 0.3s;
+  }
+  .spec-card:last-child { border-right: none; }
+  .spec-card:hover { background: rgba(255,255,255,0.04); }
+
+  .spec-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--rust);
+    letter-spacing: 0.2em;
+    margin-bottom: 2rem;
+  }
+
+  .spec-icon {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .spec-title {
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .spec-desc {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.6);
+  }
+
+  .spec-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 1.5rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(245,240,232,0.5);
+  }
+
+  /* ── CAREER ── */
+  #career { background: var(--cream); }
+
+  .timeline {
+    position: relative;
+    max-width: 900px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 0; bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .tl-item.visible { opacity: 1; transform: none; }
+
+  .tl-dot {
+    width: 23px; height: 23px;
+    border-radius: 50%;
+    border: 2px solid var(--rust);
+    background: var(--cream);
+    margin-top: 0.3rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tl-dot.active {
+    background: var(--rust);
+  }
+
+  .tl-body {}
+
+  .tl-meta {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tl-company {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+  }
+
+  .tl-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .tl-role {
+    font-size: 1.55rem;
+    font-weight: 300;
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .tl-desc {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 600px;
+  }
+
+  /* ── EDUCATION ── */
+  #education {
+    background: var(--paper);
+  }
+
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+  }
+
+  .edu-card {
+    background: var(--paper);
+    padding: 2.8rem;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .edu-card:hover { background: var(--cream); }
+
+  .edu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--rust);
+    transition: height 0.4s;
+  }
+  .edu-card:hover::before { height: 100%; }
+
+  .edu-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .edu-title {
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  .edu-inst {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #contact::before {
+    content: 'HELLO';
+    position: absolute;
+    font-size: 22vw;
+    font-weight: 300;
+    color: rgba(255,255,255,0.025);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .contact-inner { position: relative; z-index: 1; }
+
+  #contact .section-title { margin-bottom: 1rem; }
+
+  .contact-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgba(245,240,232,0.55);
+    margin-bottom: 4rem;
+    font-style: italic;
+  }
+
+  .contact-links {
+    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+    margin-bottom: 5rem;
+  }
+
+  .contact-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--paper);
+    padding: 1rem 2.2rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.25s;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .contact-link:hover { border-color: var(--rust); color: var(--rust); }
+
+  .location-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.35);
+    margin-bottom: 3rem;
+  }
+
+  footer {
+    background: var(--ink);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 1.8rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: rgba(245,240,232,0.3);
+    text-transform: uppercase;
+  }
+
+  /* ── ENTRANCE ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag   { animation: fadeUp 0.8s 0.1s both; }
+  .hero-name  { animation: fadeUp 0.8s 0.25s both; }
+  .hero-rule  { animation: fadeUp 0.6s 0.45s both; }
+  .hero-subtitle { animation: fadeUp 0.8s 0.55s both; }
+  .hero-cta-row  { animation: fadeUp 0.8s 0.7s both; }
+  .years-badge   { animation: fadeUp 1s 0.3s both; }
+  .hero-stats    { animation: fadeUp 0.8s 0.6s both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { gap: 1.5rem; }
+
+    #hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 8rem 2rem 3rem; border-right: none; border-bottom: 1px solid var(--line); }
+    .hero-right { padding: 3rem 2rem 5rem; }
+    .years-badge { position: static; transform: none; text-align: left; margin-bottom: 2rem; }
+    .years-num { font-size: 6rem; }
+    .hero-stats { position: static; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; }
+
+    section { padding: 5rem 2rem; }
+    .spec-grid { grid-template-columns: 1fr 1fr; }
+    .spec-card { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .edu-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .spec-grid { grid-template-columns: 1fr; }
+    .hero-name { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">RT — Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#specialties">Expertise</a></li>
+    <li><a href="#career">Career</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Software Engineer &amp; System Designer</p>
+    <h1 class="hero-name">Rahul<br><em>Thakur.</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-subtitle">16+ years specialising in Web Technologies, Cloud Applications, and Enterprise Integration across global markets.</p>
+    <div class="hero-cta-row">
+      <a href="#career" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="years-badge">
+      <div class="years-num">16</div>
+      <p class="years-label">Years of Experience</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">∞M</div>
+        <div class="stat-label">Records Processed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Continents</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Masters Degrees</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALTIES -->
+<section id="specialties">
+  <p class="section-eyebrow">Core Specialties</p>
+  <h2 class="section-title">Where I <em>Excel</em></h2>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <p class="spec-num">01</p>
+      <span class="spec-icon">⚡</span>
+      <h3 class="spec-title">Software Development</h3>
+      <p class="spec-desc">Full-stack expertise building performant, maintainable applications from concept to production deployment.</p>
+      <div class="spec-tags">
+        <span class="tag">Node.js</span>
+        <span class="tag">PHP</span>
+        <span class="tag">C#</span>
+      </div>
+    </div>
+    <div class="spec-card">
+      <p class="spec-num">02</p>
+      <span class="spec-icon">◈</span>
+      <h3 class="spec-title">System Architecture</h3>
+      <p class="spec-desc">Designing scalable cloud modules and API-heavy integrations that serve millions of concurrent users.</p>
+      <div class="spec-tags">
+        <span class="tag">Cloud</span>
+        <span class="tag">REST APIs</span>
+        <span class="tag">Microservices</span>
+      </div>
+    </div>
+    <div class="spec-card">
+      <p class="spec-num">03</p>
+      <span class="spec-icon">⬡</span>
+      <h3 class="spec-title">Infrastructure</h3>
+      <p class="spec-desc">Deep expertise in database design, server-side scripting, and managing high-availability data pipelines.</p>
+      <div class="spec-tags">
+        <span class="tag">MySQL</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">Server-side</span>
+      </div>
+    </div>
+    <div class="spec-card">
+      <p class="spec-num">04</p>
+      <span class="spec-icon">◎</span>
+      <h3 class="spec-title">Mentorship</h3>
+      <p class="spec-desc">Professional mentorship and technical workshop leadership — building the next generation of engineers.</p>
+      <div class="spec-tags">
+        <span class="tag">Training</span>
+        <span class="tag">Workshops</span>
+        <span class="tag">Leadership</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section id="career">
+  <p class="section-eyebrow">Career Highlights</p>
+  <h2 class="section-title">The <em>Journey</em></h2>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot active"></div>
+      <div class="tl-body">
+        <div class="tl-meta">
+          <span class="tl-company">Priority Software US</span>
+          <span class="tl-period">Lead Engineer</span>
+        </div>
+        <h3 class="tl-role">Business Accounting Cloud Platform</h3>
+        <p class="tl-desc">Led engineering for a cloud-based business accounting system processing millions of records. Architected scalable modules and drove the transition to cloud-native infrastructure, ensuring reliability for enterprise clients.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <div class="tl-meta">
+          <span class="tl-company">Sourcebits, Inc.</span>
+          <span class="tl-period">Technical Lead</span>
+        </div>
+        <h3 class="tl-role">Web Product Development & Team Training</h3>
+        <p class="tl-desc">Provided technical leadership across web product development initiatives while running structured training programs. Mentored cross-functional teams and elevated engineering standards across multiple product lines.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <div class="tl-meta">
+          <span class="tl-company">Gaming & Simulation</span>
+          <span class="tl-period">Lead Developer</span>
+        </div>
+        <h3 class="tl-role">3D Simulations — Dubai Metro & Healthcare</h3>
+        <p class="tl-desc">Developed immersive 3D simulation environments for the Dubai Metro and healthcare training programs. Bridged cutting-edge graphics technology with real-world operational training requirements.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-eyebrow">Education & Certifications</p>
+  <h2 class="section-title">Continuous <em>Learning</em></h2>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <p class="edu-type">Graduate Degree</p>
+      <h3 class="edu-title">ME in Computer Science</h3>
+      <p class="edu-inst">Master of Engineering</p>
+    </div>
+    <div class="edu-card">
+      <p class="edu-type">Undergraduate Degree</p>
+      <h3 class="edu-title">BE in Computer Engineering</h3>
+      <p class="edu-inst">Bachelor of Engineering</p>
+    </div>
+    <div class="edu-card">
+      <p class="edu-type">Executive Education</p>
+      <h3 class="edu-title">Finance for Non-Finance Executives</h3>
+      <p class="edu-inst">IIM Bangalore</p>
+    </div>
+    <div class="edu-card">
+      <p class="edu-type">Top Certifications</p>
+      <h3 class="edu-title">The Data Scientist's Toolbox</h3>
+      <p class="edu-inst">+ Web Application Architectures</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-eyebrow">Let's Connect</p>
+    <h2 class="section-title">Get In <em>Touch</em></h2>
+    <p class="contact-sub">Open to new opportunities, collaborations, and conversations.</p>
+    <div class="contact-links">
+      <a href="https://linkedin.com/in/rahulthakur" class="contact-link" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:rahul@example.com" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email Me
+      </a>
+    </div>
+    <p class="location-note">📍 Based in UAE &amp; India — Available Globally</p>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2025 Rahul Thakur. All rights reserved.</span>
+  <span class="footer-copy">Software Engineer & System Designer</span>
+</footer>
+
+<script>
+  // Scroll-triggered timeline animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 150);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.tl-item').forEach(el => observer.observe(el));
+
+  // Smooth active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.style.color = a.getAttribute('href') === '#' + e.target.id
+            ? 'var(--rust)' : '';
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
